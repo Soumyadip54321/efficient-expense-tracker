@@ -11,3 +11,11 @@
 
 # APIs
 ExpenseTracker/frontend/.streamlit/secrets.toml
+
+# Python cache
+ExpenseTracker/backend/__pycache__/
+ExpenseTracker/frontend/__pycache__/
+*.py[cod]
+
+# Log files
+ExpenseTracker/backend/*.log
