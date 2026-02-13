@@ -3,7 +3,7 @@ Script to setup the UI of Expense Tracker application.
 '''
 
 import streamlit as st
-from chatbot_support import create_perplexity_clone
+from chatbot_support import chatbot_response
 from auth_dashboard import authenticate_user, logout_user
 from analytics_dashboard import get_analytics
 from db_reset_dashboard import reset
@@ -29,7 +29,7 @@ if authenticate_user():
 
         # Analytics Tab: Data displays category-wise expenses between the dates chosen.
         with tab_analytics:
-            get_analytics()
+            get_analytics(st.session_state.userid)
 
         # Reset Tab: This resets the database for the user i.e. removes all entries.
         with tab_reset:
@@ -38,7 +38,7 @@ if authenticate_user():
     # Add Chatbot to sidebar
     with st.sidebar:
         st.header("_Expensi_ 🤖")
-        create_perplexity_clone()
+        chatbot_response(st.session_state.userid)
 
 
 
