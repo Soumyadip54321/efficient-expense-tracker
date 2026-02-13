@@ -112,18 +112,19 @@ def reset_database():
         cursor._connection.commit()
 
 
-def fetch_expenses_summary(expense_date1,expense_date2):
+def fetch_expenses_summary(expense_date1,expense_date2,userid : int):
     '''
     Function to fetch all expenses between two dates across different categories.
     :param expense_date1: Start date
     :param expense_date2: End date
+    :param userid: User ID
     :return:
     '''
 
     logger.info('Fetching all expenses between dates')
 
     with get_db_cursor() as cursor:
-        cursor.execute("select category,sum(amount) as total from expenses where expense_date between %s and %s group by category order by total desc;",(expense_date1,expense_date2,))
+        cursor.execute("select category,sum(amount) as total from expenses where id = %s and expense_date between %s and %s group by category order by total desc;",(userid,expense_date1,expense_date2,))
         expenses = cursor.fetchall()
         return expenses
 
