@@ -30,6 +30,7 @@ class Expenses_posted(BaseModel):
 class DateRange(BaseModel):
     start: date
     end: date
+    userid: int
 
 class UserInfo(BaseModel):
     username: str
@@ -78,7 +79,7 @@ def get_expenses_between_dates(date_range: DateRange):
     :param expense_date: Start & end dates filtered out from the body of the request via validation.
     :return:
     '''
-    data = db_interaction.fetch_expenses_summary(date_range.start, date_range.end)
+    data = db_interaction.fetch_expenses_summary(date_range.start, date_range.end, date_range.userid)
 
     if data:
         return data
