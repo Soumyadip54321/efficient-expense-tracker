@@ -3,12 +3,14 @@ import requests
 import datetime as dt
 import pandas as pd
 import plotly.express as px
+from ExpenseTracker.backend.analytics_summarizer import draw_analytics_summary
 
 API_url = 'http://127.0.0.1:8000'
 
-def get_analytics():
+def get_analytics(userid : str):
     '''
     Function that displays UI under analytics tab in Simpex dashboard.
+    :param userid: User ID
     :return:
     '''
     dates_for_expense_fetch = {}
@@ -24,11 +26,12 @@ def get_analytics():
         dates_for_expense_fetch.update({
             'start': date1.isoformat(),
             'end': date2.isoformat(),
+            'userid': int(userid)
         })
 
         submitted = st.button('Get Analytics', type='primary')
 
-        # fetch data from server and display
+        # fetch data from server corresponding to the user logged in and display
         if submitted:
             response = requests.post(f'{API_url}/analytics/', json=dates_for_expense_fetch)
             if response.status_code == 200:
@@ -48,5 +51,12 @@ def get_analytics():
                         fig = px.pie(df, names='category', values='total',
                                      title='%-wise distribution of expenses across categories')
                         st.plotly_chart(fig)
+
+                    # display data summary
+                    st.subheader(":red[Summary]")
+                    with st.container(border=True):
+                        placeholder = st.empty()
+                        for response in draw_analytics_summary(df):
+                            placeholder.write(response)
             else:
                 st.error('Sorry. Couldn\'t connect. Try again!!')
