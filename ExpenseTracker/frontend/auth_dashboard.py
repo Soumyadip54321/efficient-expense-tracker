@@ -4,6 +4,7 @@ Script that sets up user authentication on login to Simpex app.
 import time
 import streamlit as st
 import requests
+from ExpenseTracker.backend.fetch_userid_and_userscope_tables import fetch_userid_from_username, create_user_views
 
 API_URL = 'http://127.0.0.1:8000'
 
@@ -76,6 +77,8 @@ def login_user():
         if submitted:
             if check_user_access(username,password):
                 st.session_state.authenticated = True
+                st.session_state.userid = fetch_userid_from_username(username)
+
                 st.write(":green[You have successfully logged in!]")
                 time.sleep(5)
                 st.rerun()
@@ -93,6 +96,9 @@ def authenticate_user():
     '''
     if 'authenticated' not in st.session_state:
         st.session_state.authenticated = False
+
+    if 'userid' not in st.session_state:
+        st.session_state.userid = ""
 
     if 'page' not in st.session_state:
         st.session_state.page = 'login'
